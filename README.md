@@ -102,7 +102,7 @@ Ingestão (com anomalias) → Pipeline detecta erros → Log em Parquet (DuckDB)
 Base de conhecimento (RAG) ←── IA (Gemini) diagnostica e aprende
 ```
 
-Isso é essencialmente um protótipo de **"self-healing data governance"**: em vez de um humano documentar manualmente cada incidente de qualidade de dados, a própria IA analisa, diagnostica e documenta o incidente na base de conhecimento corporativa, que por sua vez alimenta análises futuras (aprendizado cumulativo).
+Isso é essencialmente um protótipo de **"self-healing data governance"**: em vez de um humano documentar manualmente cada incidente de qualidade de dados, a própria IA analisa, diagnostica e documenta o incidente na base de conhecimento corporativa, que por sua vez alimenta análises futuras (aprendizado cumulativo). 
 
 ---
 
@@ -120,31 +120,16 @@ uvicorn app.main:app --reload
 # 3. Disparar a ingestão de dados (com anomalias injetadas)
 python trigger_ingestion.py
 
-# 4. Rodar o pipeline de qualidade (gera observability/quality_logs.parquet)
-python pipeline/run_quality_logs.py   # nome inferido, não confirmado
+# 4. Rodar a camada silver
+python pipeline/run_silver_table.py 
 
-# 5. Rodar o agente de IA para analisar os logs e atualizar o RAG
+# 5. Rodar o pipeline de qualidade (gera observability/quality_logs.parquet)
+python pipeline/run_quality_logs.py  
+
+# 6. Rodar a camada gold
+python pipeline/run_gold_table.py 
+
+# 7. Rodar o agente de IA para analisar os logs e atualizar o RAG
 python agent_insights.py
 ```
 
-⚠️ É necessário configurar a variável de ambiente `GEMINI_API` (ou a autenticação padrão do SDK `google-genai`) — no código atual ela está inicializada como string vazia (`os.environ["GEMINI_API"] = ""`), o que é um ponto de atenção: a chave deveria vir de uma variável de ambiente real/`.env`, não hardcoded.
-
----
-
-## 📌 Pontos de atenção observados no código
-
-- **Chave de API vazia hardcoded** (`os.environ["GEMINI_API"] = ""`) em `agent_insights.py` — provavelmente um placeholder esquecido; o ideal seria carregar de `.env`/secret manager.
-- **README essencialmente vazio** — falta documentação oficial de setup, arquitetura e propósito.
-- Projeto tem cara de **estudo pessoal / portfólio / POC** (nome do repo, uso da PokéAPI como "dado de brincadeira", poucos commits), não de sistema em produção.
-
----
-
-## ❓ Quer que eu aprofunde algo?
-
-Como não consegui listar automaticamente os arquivos dentro de `app/`, `data/`, `observability/` e `pipeline/` (o GitHub bloqueou a navegação em árvore para acesso automatizado), esse MD foi montado com base nos arquivos que consegui abrir diretamente. Se você me passar os links diretos (formato `.../blob/main/pasta/arquivo.py`) de arquivos como:
-
-- `app/main.py` (a API FastAPI)
-- `pipeline/run_quality_logs.py`
-- algum arquivo dentro de `data/`
-
-eu completo o documento com os detalhes exatos de implementação em vez de inferências.
