@@ -29,9 +29,6 @@ ia-observability-pipeline/
 ├── requirements.txt     # Dependências Python
 └── .gitignore
 ```
-
-> As pastas `app/`, `data/`, `observability/` e `pipeline/` não puderam ter seus arquivos individuais listados neste momento (a navegação em árvore do GitHub bloqueou o acesso automatizado), mas seus papéis foram inferidos pelo uso que o código faz delas (ver seção "Como as peças se conectam"). Posso detalhar qualquer uma delas se você me passar o link direto do arquivo.
-
 ---
 
 ## ⚙️ Stack técnica (via `requirements.txt`)
@@ -45,7 +42,7 @@ ia-observability-pipeline/
 | Validação de dados | `pydantic`, `pydantic_core`, `annotated-doc` |
 | Utilitários | `python-dateutil`, `tzdata`, `click`, `colorama` |
 
-Combinação que sugere: **ingestão via API → processamento distribuído/columnar (Spark/Polars) → validação com Pydantic → consulta analítica com DuckDB → enriquecimento com LLM (Gemini e/ou Ollama local)**.
+Combinação: **ingestão via API → processamento distribuído/columnar (Spark/Polars) → validação com Pydantic → consulta analítica com DuckDB → enriquecimento com LLM (Gemini)**.
 
 ---
 
